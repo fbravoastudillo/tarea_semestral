@@ -8,7 +8,7 @@ function PagRegistro() {
 
   const handleRegistro = (e) => {
     e.preventDefault();
-    alert('Registro exitoso');
+    alert('Registro exitoso ');
     navigate('/login');
   };
 
