@@ -13,8 +13,8 @@ function Usuarios() {
           </div>
           <table className="w-full table-auto border-collapse">
             <thead>
-              <tr className="bg-gray-200">
-                <th className="border px-4 py-2">Nombre</th>
+            <tr className="bg-blue-500 font-extrabold text-white text-xl">
+            <th className="border px-4 py-2">Nombre</th>
                 <th className="border px-4 py-2">Área</th>
                 <th className="border px-4 py-2">Perfil</th>
                 <th className="border px-4 py-2">Tickets</th>
