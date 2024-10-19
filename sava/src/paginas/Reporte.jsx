@@ -1,4 +1,22 @@
+
+import { exportToExcel } from '../controladores/reportes';
+
 function Reporte() {
+  const tableData = [
+    { venta: 'TIPO 1', contenido: 'Almuerzo + Bebida', detalles: 'Para Funcionario', precio: 0, total: 0 },
+    { venta: 'TIPO 2', contenido: 'Almuerzo + Bebida', detalles: 'Para Funcionario', precio: 0, total: 0 },
+    ...[...Array(15)].map((_, index) => ({
+        venta: 12347 + index,
+        contenido: `Almuerzo + Bebida ${String.fromCharCode(90 - index)}`,
+        detalles: 'Para funcionario',
+        precio: (index + 1) * 100,
+        total: (index + 1) * 120
+    }))
+];
+
+const handleExport = () => {
+    exportToExcel(tableData, 'ReporteDeVentas');
+};
     return (
       <div className="p-4 bg-gray-100 min-h-screen">
         <h1 className="text-2xl font-bold mb-4">Reporte de Ventas</h1>
@@ -44,7 +62,7 @@ function Reporte() {
             </tbody>
           </table>
           <div className="mt-4 text-right">
-            <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-400">
+            <button onClick={handleExport} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-400">
               Exportar
             </button>
           </div>
@@ -52,5 +70,5 @@ function Reporte() {
       </div>
     );
   }
-  
+
   export default Reporte;
