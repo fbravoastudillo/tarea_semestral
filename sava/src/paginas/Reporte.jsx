@@ -28,10 +28,19 @@ function Reporte() {
                 <td className="border px-4 py-2">$0</td>
                 <td className="border px-4 py-2">$0</td>
               </tr>
+              {[...Array(15)].map((_, index) => (
+                <tr key={index}>
+                    <td className="border px-4 py-2">{12347 + index}</td>
+                    <td className="border px-4 py-2">Almuerzo + Bebida {String.fromCharCode(90 - index)}</td>
+                    <td className="border px-4 py-2">Para funcionario</td>
+                    <td className="border px-4 py-2">${(index + 1) * 100}</td>
+                    <td className="border px-4 py-2">${(index + 1) * 120}</td>
+                </tr>
+            ))}
               <tr>
                 <td className="border px-4 py-2 text-right font-bold" colSpan="4">Total</td>
                 <td className="border px-4 py-2">$0</td>
-              </tr>
+              </tr>          
             </tbody>
           </table>
           <div className="mt-4 text-right">
