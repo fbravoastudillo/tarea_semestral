@@ -1,6 +1,23 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 function Layout() {
+  const navigate = useNavigate();
+  const [nombreUsuario, setNombreUsuario] = useState('');
+
+  useEffect(() => {
+    const nombre = localStorage.getItem('nombreUsuario');
+    if (nombre) {
+      setNombreUsuario(nombre);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('nombreUsuario');
+    navigate('/login');
+  };
+
   return (
     <div className="flex h-screen bg-gray-100">
       <aside className="w-64 bg-gray-800 text-white flex flex-col">
@@ -53,8 +70,11 @@ function Layout() {
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold">SAVA</h1>
             <div className="flex items-center space-x-4">
-              <span className="text-gray-600">Usuario</span>
-              <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-500">
+              <span className="text-gray-600">Usuario: {nombreUsuario}</span>
+              <button 
+                onClick={handleLogout} 
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-500"
+              >
                 Logout
               </button>
             </div>
