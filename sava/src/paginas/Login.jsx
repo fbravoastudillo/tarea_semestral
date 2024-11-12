@@ -1,17 +1,26 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../services/api';
 
 function PagLogin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (email === 'admin@example.com' && password === 'password') {
-      navigate('/dashboard');
-    } else {
-      alert('Credenciales incorrectas');
+    try {
+      // Realiza la solicitud de inicio de sesión
+      const data = await loginUser(email, password);
+      if (data.success) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('nombreUsuario', data.nombre);
+        navigate('/dashboard');
+      } else {
+        alert('Credenciales incorrectas');
+      }
+    } catch (error) {
+      alert('Error en el servidor o credenciales incorrectas');
     }
   };
 

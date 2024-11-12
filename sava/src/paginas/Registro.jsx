@@ -1,15 +1,22 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { registerUser } from '../services/api';
 
 function PagRegistro() {
+  const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleRegistro = (e) => {
+  const handleRegistro = async (e) => {
     e.preventDefault();
-    alert('Registro exitoso ');
-    navigate('/login');
+    try {
+      await registerUser(nombre, email, password);
+      alert('Registro exitoso');
+      navigate('/login');
+    } catch (error) {
+      alert('Error al registrar usuario');
+    }
   };
 
   return (
@@ -17,6 +24,17 @@ function PagRegistro() {
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
         <h1 className="text-2xl font-bold mb-6 text-center">Registro - SAVA</h1>
         <form onSubmit={handleRegistro}>
+          <div className="mb-4">
+            <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">Nombre</label>
+            <input
+              type="text"
+              id="nombre"
+              className="mt-1 p-2 w-full border rounded"
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
+              required
+            />
+          </div>
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
             <input
