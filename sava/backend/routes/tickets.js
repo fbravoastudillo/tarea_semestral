@@ -1,17 +1,37 @@
 const express = require('express');
 const router = express.Router();
+const Ticket = require('../models/Ticket'); // Importa el modelo de Ticket
 
-// Datos de ejemplo, en producción deberías obtenerlos de una base de datos
-const tickets = [
-  { nombre: 'TIPO 1', contenido: 'Almuerzo + Bebida', detalles: 'Para Funcionario', precio: 0 },
-  { nombre: 'TIPO 2', contenido: 'Cena + Bebida', detalles: 'Para Visitante', precio: 500 },
-];
-
-router.get('/tickets', (req, res) => {
+// Ruta para obtener todos los tickets
+router.get('/', async (req, res) => {
   try {
-    res.status(200).json(tickets);
+    const tickets = await Ticket.find();
+    res.json(tickets);
   } catch (error) {
-    res.status(500).json({ message: 'Error al obtener los tickets', error: error.message });
+    res.status(500).json({ error: 'Error al obtener los tickets' });
+  }
+});
+
+// Ruta para crear un nuevo ticket
+router.post('/', async (req, res) => {
+  try {
+    const newTicket = new Ticket(req.body);
+    await newTicket.save();
+    res.status(201).json(newTicket);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al crear el ticket' });
+  }
+});
+// Ruta para eliminar un ticket
+router.delete('/:id', async (req, res) => {
+  try {
+    const ticket = await Ticket.findByIdAndDelete(req.params.id);
+    if (!ticket) {
+      return res.status(404).json({ error: 'Ticket no encontrado' });
+    }
+    res.status(200).json({ message: 'Ticket eliminado correctamente' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al eliminar el ticket' });
   }
 });
 

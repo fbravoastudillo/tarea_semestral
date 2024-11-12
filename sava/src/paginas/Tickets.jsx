@@ -1,13 +1,100 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function Tickets() {
-  const [tickets, setTickets] = useState([
-    { nombre: 'TIPO 1', contenido: 'Almuerzo + Bebida', detalles: 'Para Funcionario', precio: '$0' }
-  ]);
+  const [tickets, setTickets] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [newTicketData, setNewTicketData] = useState({
+    nombre: '',
+    contenido: 'Turno 1',
+    detalles: 'Finanzas',
+    precio: '4990'
+  });
+
+  // Opciones para contenido y detalles
+  const contenidoOptions = [
+    { value: 'Turno 1', label: 'Desayuno + Almuerzo', precio: '4990' },
+    { value: 'Turno 2', label: 'Once + Cena1', precio: '7990' },
+    { value: 'Turno 3', label: 'Cena2 + Desayuno', precio: '5990' }
+  ];
+
+  const detallesOptions = [
+    'Finanzas',
+    'TI',
+    'Administrador',
+    'Logística',
+    'Marketing'
+  ];
+
+  useEffect(() => {
+    fetchTickets();
+  }, []);
+
+  const fetchTickets = async () => {
+    try {
+      const response = await fetch('http://localhost:5101/api/tickets');
+      if (!response.ok) throw new Error('Error al obtener los tickets');
+      const data = await response.json();
+      setTickets(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleAddTicket = () => {
-    const newTicket = { nombre: 'TIPO 2', contenido: 'Cena + Bebida', detalles: 'Para Invitado', precio: '$10' };
-    setTickets([...tickets, newTicket]);
+    setShowForm(true);
+  };
+
+  const handleContenidoChange = (e) => {
+    const selectedTurno = contenidoOptions.find(option => option.value === e.target.value);
+    setNewTicketData({
+      ...newTicketData,
+      contenido: selectedTurno.value,
+      precio: selectedTurno.precio
+    });
+  };
+
+  const handleSaveTicket = async () => {
+    try {
+      const response = await fetch('http://localhost:5101/api/tickets', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newTicketData),
+      });
+      if (!response.ok) throw new Error('Error al guardar el ticket');
+      const data = await response.json();
+      setTickets([...tickets, data]); // Agrega el nuevo ticket al estado
+      setShowForm(false); // Cierra el formulario
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // Función para imprimir el ticket
+  const handlePrintTicket = (ticket) => {
+    const printWindow = window.open('', '', 'width=600,height=400');
+    printWindow.document.write(`
+      <h1>Ticket: ${ticket.nombre}</h1>
+      <p><strong>Contenido:</strong> ${ticket.contenido}</p>
+      <p><strong>Detalles:</strong> ${ticket.detalles}</p>
+      <p><strong>Precio:</strong> ${ticket.precio}</p>
+      <button onclick="window.print()">Imprimir</button>
+    `);
+    printWindow.document.close();
+  };
+
+  // Función para eliminar un ticket
+  const handleDeleteTicket = async (ticketId) => {
+    try {
+      const response = await fetch(`http://localhost:5101/api/tickets/${ticketId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Error al eliminar el ticket');
+      setTickets(tickets.filter(ticket => ticket._id !== ticketId)); // Elimina el ticket del estado
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -15,19 +102,64 @@ function Tickets() {
       <h1 className="text-2xl font-bold mb-4">Gestión de Tickets</h1>
       <div className="bg-white shadow-md rounded p-6">
         <div className="flex justify-between mb-4">
-          <button onClick={handleAddTicket} id="agregar" className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-400">
+          <button onClick={handleAddTicket} className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-400">
             Crear Ticket
           </button>
           <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-400">
             Exportar
           </button>
         </div>
+
+        {showForm && (
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="Nombre"
+              value={newTicketData.nombre}
+              onChange={(e) => setNewTicketData({ ...newTicketData, nombre: e.target.value })}
+              className="border px-2 py-1 mr-2"
+            />
+            <select
+              value={newTicketData.contenido}
+              onChange={handleContenidoChange}
+              className="border px-2 py-1 mr-2"
+            >
+              {contenidoOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <select
+              value={newTicketData.detalles}
+              onChange={(e) => setNewTicketData({ ...newTicketData, detalles: e.target.value })}
+              className="border px-2 py-1 mr-2"
+            >
+              {detallesOptions.map((detalle) => (
+                <option key={detalle} value={detalle}>
+                  {detalle}
+                </option>
+              ))}
+            </select>
+            <input
+              type="text"
+              placeholder="Precio"
+              value={newTicketData.precio}
+              readOnly
+              className="border px-2 py-1 mr-2"
+            />
+            <button onClick={handleSaveTicket} className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-400">
+              Guardar Ticket
+            </button>
+          </div>
+        )}
+
         <table className="w-full table-auto border-collapse">
           <thead>
-          <tr className="bg-blue-500 font-extrabold text-white text-xl">
-          <th className="border px-4 py-2">Nombre</th>
-              <th className="border px-4 py-2">Contenido</th>
-              <th className="border px-4 py-2">Detalles</th>
+            <tr className="bg-blue-500 font-extrabold text-white text-xl">
+              <th className="border px-4 py-2">Nombre</th>
+              <th className="border px-4 py-2">Turno</th>
+              <th className="border px-4 py-2">Departamento</th>
               <th className="border px-4 py-2">Precio</th>
               <th className="border px-4 py-2">Acciones</th>
             </tr>
@@ -39,7 +171,21 @@ function Tickets() {
                 <td className="border px-4 py-2">{ticket.contenido}</td>
                 <td className="border px-4 py-2">{ticket.detalles}</td>
                 <td className="border px-4 py-2">{ticket.precio}</td>
-                <td className="border px-4 py-2">Acciones</td>
+                <td className="border px-4 py-2 flex justify-center items-center">
+  <button 
+    onClick={() => handlePrintTicket(ticket)}
+    className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-400 mr-2"
+  >
+    Imprimir
+  </button>
+  <button
+    onClick={() => handleDeleteTicket(ticket._id)}
+    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-400"
+  >
+    Eliminar
+  </button>
+</td>
+
               </tr>
             ))}
           </tbody>
