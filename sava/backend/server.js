@@ -19,9 +19,11 @@ mongoose.connect(process.env.MONGO_URI, {
 
 // Rutas de la API
 app.use('/api/auth', require('./routes/auth'));
-app.use('/api/usuarios', require('./routes/usuarios'));
-app.use('/api/tickets', require('./routes/tickets'));
 app.use('/api/dashboard', require('./routes/dashboard'));
+app.use('/api/reportes', require('./routes/reportes'));
+app.use('/api/tickets', require('./routes/tickets'));
+app.use('/api/usuarios', require('./routes/usuarios'));
+
 
 // Iniciar el servidor
 app.listen(PORT, () => {
