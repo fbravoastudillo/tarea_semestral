@@ -23,6 +23,7 @@ app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/reportes', require('./routes/reportes'));
 app.use('/api/tickets', require('./routes/tickets'));
 app.use('/api/usuarios', require('./routes/usuarios'));
+app.use('/api/crearusuario', require('./routes/crearusuario'));
 
 
 // Iniciar el servidor

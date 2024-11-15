@@ -45,3 +45,14 @@ export const getTickets = async () => {
     throw error;
   }
 };
+
+// Función para crear un usuario
+export const createUser = async (correo, nombre, cargo, area, perfil) => {
+  try {
+    const response = await axios.post(`${API_URL}/api/crearusuario`, { correo, nombre, cargo, area, perfil });
+    return response.data;
+  } catch (error) {
+    console.error('Error en el registro:', error);
+    throw error;
+  }
+};
