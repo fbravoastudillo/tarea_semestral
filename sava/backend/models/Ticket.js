@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
 
 const ticketSchema = new mongoose.Schema({
-  nombre: { type: String, required: true },
-  contenido: { type: String, required: true },
-  detalles: { type: String, required: true },
-  precio: { type: Number, required: true },
+  nombre: String,
+  contenido: String,
+  detalles: String,
+  precio: String
 });
 
-module.exports = mongoose.model('Ticket', ticketSchema);
+// Define el modelo solo si no ha sido definido previamente
+const Ticket = mongoose.models.Ticket || mongoose.model('Ticket', ticketSchema);
+
+module.exports = Ticket;
