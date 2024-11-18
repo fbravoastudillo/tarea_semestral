@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 function Usuarios() {
   const [usuarios, setUsuarios] = useState([]);
@@ -22,9 +23,9 @@ function Usuarios() {
       <h1 className="text-2xl font-bold mb-4">Gestión de Usuarios</h1>
       <div className="bg-white shadow-md rounded p-6">
         <div className="flex justify-between mb-4">
-          <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-400">
+          <Link to="/crear-usuario" className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-400">
             Crear Usuario
-          </button>
+          </Link>
           <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-400">
             Exportar
           </button>

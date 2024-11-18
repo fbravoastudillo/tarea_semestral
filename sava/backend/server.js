@@ -23,6 +23,7 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/reportes', require('./routes/reportes'));
 app.use('/api/usuarios', require('./routes/usuarios'));
+app.use('/api/crearusuario', require('./routes/crearusuario'));
 
 app.use('/api/tickets', ticketRoutes);
 

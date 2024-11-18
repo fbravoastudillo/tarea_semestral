@@ -7,6 +7,7 @@ import Reporte from './paginas/Reporte';
 import Usuarios from './paginas/Usuarios';
 import Tickets from './paginas/Tickets';
 import ProtectedRoute from './componentes/ProtectedRoute'; // Importa el componente
+import CrearUsuario from './paginas/CrearUsuario';
 
 function App() {
   return (
@@ -56,6 +57,14 @@ function App() {
               <ProtectedRoute>
                 <Usuarios />
               </ProtectedRoute>
+            }
+          />
+          <Route
+          path="/crear-usuario"
+          element={
+            <ProtectedRoute>
+              <CrearUsuario />
+            </ProtectedRoute>
             }
           />
           <Route
