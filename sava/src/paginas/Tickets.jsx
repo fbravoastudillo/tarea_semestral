@@ -71,18 +71,35 @@ function Tickets() {
     }
   };
 
-  // Función para imprimir el ticket
+  // Función para imprimir el ticket con código de barras
   const handlePrintTicket = (ticket) => {
     const printWindow = window.open('', '', 'width=600,height=400');
+  
+    // Generar el contenido del ticket sin el código de barras
     printWindow.document.write(`
-      <h1>Ticket: ${ticket.nombre}</h1>
-      <p><strong>Contenido:</strong> ${ticket.contenido}</p>
-      <p><strong>Detalles:</strong> ${ticket.detalles}</p>
-      <p><strong>Precio:</strong> ${ticket.precio}</p>
-      <button onclick="window.print()">Imprimir</button>
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Imprimir Ticket</title>
+      </head>
+      <body>
+        <h1>Ticket-ID: ${ticket._id}</h1>
+        <h1>Nombre: ${ticket.nombre}</h1>
+        <p><strong>Contenido:</strong> ${ticket.contenido}</p>
+        <p><strong>Detalles:</strong> ${ticket.detalles}</p>
+        <p><strong>Precio:</strong> ${ticket.precio}</p>
+        <br>
+        <button onclick="window.print()">Imprimir</button>
+      </body>
+      </html>
     `);
+  
     printWindow.document.close();
   };
+  
+
 
   // Función para eliminar un ticket
   const handleDeleteTicket = async (ticketId) => {
