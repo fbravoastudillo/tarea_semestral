@@ -66,6 +66,17 @@ function Reporte() {
       <h1 className="text-2xl font-bold mb-4">Reporte de Tickets</h1>
       <div className="bg-white shadow-md rounded p-6">
 
+        {/* Filtro por Fecha */}
+        <div className="mb-4 flex items-center">
+          <label className="mr-2 font-bold">Fecha:</label>
+          <input 
+            type="date" 
+            value={selectedDate} 
+            onChange={(e) => setSelectedDate(e.target.value)} 
+            className="border px-2 py-1"
+          />
+        </div>
+
         {/* Resumen */}
         <div className="mb-4">
           <h2 className="text-xl font-bold mb-2">Resumen</h2>
