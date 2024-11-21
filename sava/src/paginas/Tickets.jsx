@@ -14,9 +14,7 @@ function Tickets() {
   const contenidoOptions = [
     { value: 'Turno 1', label: 'Desayuno + Almuerzo', precio: '4990' },
     { value: 'Turno 2', label: 'Once + Cena1', precio: '7990' },
-    { value: 'Turno 3', label: 'Cena2 + Desayuno', precio: '5990' },
-    { value: 'Adicional', label: 'Galleta', precio: '1990' },
-    { value: 'Adicional', label: 'Bebida', precio: '990' }
+    { value: 'Turno 3', label: 'Cena2 + Desayuno', precio: '5990' }
   ];
 
   const detallesOptions = [
@@ -57,6 +55,13 @@ function Tickets() {
 
   const handleSaveTicket = async () => {
     try {
+      // Verificar cuántos tickets ya existen para la persona
+      const existingTickets = tickets.filter(ticket => ticket.nombre === newTicketData.nombre);
+      if (existingTickets.length >= 2) {
+        alert('No se pueden emitir más de 2 tickets por persona diarios.');
+        return;
+      }
+
       // Obtener la fecha y hora actuales en formato YYYY-MM-DD HH:MM:SS
       const currentDateTime = new Date().toISOString().replace('T', ' ').split('.')[0];
   
