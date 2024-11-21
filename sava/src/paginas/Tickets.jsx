@@ -14,7 +14,9 @@ function Tickets() {
   const contenidoOptions = [
     { value: 'Turno 1', label: 'Desayuno + Almuerzo', precio: '4990' },
     { value: 'Turno 2', label: 'Once + Cena1', precio: '7990' },
-    { value: 'Turno 3', label: 'Cena2 + Desayuno', precio: '5990' }
+    { value: 'Turno 3', label: 'Cena2 + Desayuno', precio: '5990' },
+    { value: 'Adicional', label: 'Galleta', precio: '1990' },
+    { value: 'Adicional', label: 'Bebida', precio: '990' }
   ];
 
   const detallesOptions = [
