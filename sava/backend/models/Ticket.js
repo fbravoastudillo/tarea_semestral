@@ -4,7 +4,11 @@ const ticketSchema = new mongoose.Schema({
   nombre: String,
   contenido: String,
   detalles: String,
-  precio: String
+  precio: String,
+  fecha: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 // Define el modelo solo si no ha sido definido previamente

@@ -55,13 +55,20 @@ function Tickets() {
 
   const handleSaveTicket = async () => {
     try {
+      // Obtener la fecha y hora actuales en formato YYYY-MM-DD HH:MM:SS
+      const currentDateTime = new Date().toISOString().replace('T', ' ').split('.')[0];
+  
+      // Agregar la fecha y hora actuales a newTicketData
+      const ticketWithDateTime = { ...newTicketData, fecha: currentDateTime };
+  
       const response = await fetch('http://localhost:5101/api/tickets', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newTicketData),
+        body: JSON.stringify(ticketWithDateTime),
       });
+  
       if (!response.ok) throw new Error('Error al guardar el ticket');
       const data = await response.json();
       setTickets([...tickets, data]); // Agrega el nuevo ticket al estado
