@@ -78,7 +78,7 @@ function Tickets() {
     }
   };
 
-  // Función para imprimir el ticket con código de barras
+  // Función para imprimir el ticket
   const handlePrintTicket = (ticket) => {
     const printWindow = window.open('', '', 'width=600,height=400');
   
@@ -97,6 +97,7 @@ function Tickets() {
         <p><strong>Contenido:</strong> ${ticket.contenido}</p>
         <p><strong>Detalles:</strong> ${ticket.detalles}</p>
         <p><strong>Precio:</strong> ${ticket.precio}</p>
+        <p><strong>Fecha:</strong> ${ticket.fecha}</p>
         <br>
         <button onclick="window.print()">Imprimir</button>
       </body>
@@ -105,8 +106,6 @@ function Tickets() {
   
     printWindow.document.close();
   };
-  
-
 
   // Función para eliminar un ticket
   const handleDeleteTicket = async (ticketId) => {
@@ -115,7 +114,7 @@ function Tickets() {
         method: 'DELETE',
       });
       if (!response.ok) throw new Error('Error al eliminar el ticket');
-      setTickets(tickets.filter(ticket => ticket._id !== ticketId)); // Elimina el ticket del estado
+      setTickets(tickets.filter(ticket => ticket._id !== ticketId)); 
     } catch (error) {
       console.error(error);
     }
@@ -196,20 +195,19 @@ function Tickets() {
                 <td className="border px-4 py-2">{ticket.detalles}</td>
                 <td className="border px-4 py-2">{ticket.precio}</td>
                 <td className="border px-4 py-2 flex justify-center items-center">
-  <button 
-    onClick={() => handlePrintTicket(ticket)}
-    className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-400 mr-2"
-  >
-    Imprimir
-  </button>
-  <button
-    onClick={() => handleDeleteTicket(ticket._id)}
-    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-400"
-  >
-    Eliminar
-  </button>
-</td>
-
+                  <button 
+                    onClick={() => handlePrintTicket(ticket)}
+                    className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-400 mr-2"
+                  >
+                    Imprimir
+                  </button>
+                  <button
+                    onClick={() => handleDeleteTicket(ticket._id)}
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-400"
+                  >
+                    Eliminar
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
