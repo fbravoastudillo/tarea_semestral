@@ -2,31 +2,25 @@ import { useState, useEffect } from 'react';
 
 function Tickets() {
   const [tickets, setTickets] = useState([]);
+  const [usuarios, setUsuarios] = useState([]); // Estado para almacenar la lista de usuarios
   const [showForm, setShowForm] = useState(false);
   const [newTicketData, setNewTicketData] = useState({
     nombre: '',
     contenido: 'Turno 1',
-    detalles: 'Finanzas',
+    detalles: '',
     precio: '4990'
   });
 
-  // Opciones para contenido y detalles
+  // Opciones para contenido
   const contenidoOptions = [
     { value: 'Turno 1', label: 'Desayuno + Almuerzo', precio: '4990' },
     { value: 'Turno 2', label: 'Once + Cena1', precio: '7990' },
     { value: 'Turno 3', label: 'Cena2 + Desayuno', precio: '5990' }
   ];
 
-  const detallesOptions = [
-    'Finanzas',
-    'TI',
-    'Administrador',
-    'Logística',
-    'Marketing'
-  ];
-
   useEffect(() => {
     fetchTickets();
+    fetchUsuarios(); // Obtener la lista de usuarios cuando el componente se monte
   }, []);
 
   const fetchTickets = async () => {
@@ -40,8 +34,28 @@ function Tickets() {
     }
   };
 
+  const fetchUsuarios = async () => {
+    try {
+      const response = await fetch('http://localhost:5101/api/crearusuario/funcionarios');
+      if (!response.ok) throw new Error('Error al obtener los usuarios');
+      const data = await response.json();
+      setUsuarios(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleAddTicket = () => {
     setShowForm(true);
+  };
+
+  const handleUsuarioChange = (e) => {
+    const selectedUsuario = usuarios.find(usuario => usuario.nombre === e.target.value);
+    setNewTicketData({
+      ...newTicketData,
+      nombre: selectedUsuario.nombre,
+      detalles: selectedUsuario.area // Rellenar el área del usuario seleccionado
+    });
   };
 
   const handleContenidoChange = (e) => {
@@ -58,17 +72,17 @@ function Tickets() {
       // Verificar cuántos tickets ya existen para la persona
       const existingTickets = tickets.filter(ticket => ticket.nombre === newTicketData.nombre);
       if (existingTickets.length >= 2) {
-        alert('No se pueden emitir más de 2 tickets por persona diarios.');
+        alert('No se pueden emitir más de 2 tickets por persona.');
         return;
       }
-
+  
       // Obtener la fecha y hora actuales en formato YYYY-MM-DD HH:MM:SS
       const currentDateTime = new Date().toISOString().replace('T', ' ').split('.')[0];
   
       // Agregar la fecha y hora actuales a newTicketData
       const ticketWithDateTime = { ...newTicketData, fecha: currentDateTime };
   
-      const response = await fetch('http://localhost:5101/api/tickets', {
+      const response = await fetch('http://localhost:5101/api/tickets/nuevo_ticket', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -142,13 +156,18 @@ function Tickets() {
 
         {showForm && (
           <div className="mb-4">
-            <input
-              type="text"
-              placeholder="Nombre"
+            <select
               value={newTicketData.nombre}
-              onChange={(e) => setNewTicketData({ ...newTicketData, nombre: e.target.value })}
+              onChange={handleUsuarioChange}
               className="border px-2 py-1 mr-2"
-            />
+            >
+              <option value="">Seleccione un usuario</option>
+              {usuarios.map((usuario) => (
+                <option key={usuario._id} value={usuario.nombre}>
+                  {usuario.nombre}
+                </option>
+              ))}
+            </select>
             <select
               value={newTicketData.contenido}
               onChange={handleContenidoChange}
@@ -165,11 +184,8 @@ function Tickets() {
               onChange={(e) => setNewTicketData({ ...newTicketData, detalles: e.target.value })}
               className="border px-2 py-1 mr-2"
             >
-              {detallesOptions.map((detalle) => (
-                <option key={detalle} value={detalle}>
-                  {detalle}
-                </option>
-              ))}
+              <option value="">Seleccione un área</option>
+              <option value={newTicketData.detalles}>{newTicketData.detalles}</option>
             </select>
             <input
               type="text"
